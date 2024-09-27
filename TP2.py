@@ -15,10 +15,8 @@ csvfile=open("collection_bibliotheque.csv", "r")
 data=csv.reader(csvfile)
 library={}
 for line in data:
-    library[line[3]]=line[1:3]
-
-
-
+    library[line[3]]=line[:3]
+csvfile.close()
 
 
 ########################################################################################################## 
@@ -26,6 +24,19 @@ for line in data:
 ########################################################################################################## 
 
 # TODO : Écrire votre code ici
+csvfile=open("nouvelle_collection.csv", "r")
+data=csv.reader(csvfile)
+new_collection={}
+for line in data:
+    new_collection[line[3]]=line[:3]
+csvfile.close()
+for key,value in new_collection.items():
+    is_inside=key in library
+    if  (key in library) == False:
+        library[key]=value
+        print(f"Le livre {key} ---- {value[0]} par {value[1]} ---- a été ajouté avec succès")
+    else:
+        print(f"Le livre {key} ---- {value[0]} par {value[1]} ---- est déjà présent dans la bibliothèque")
 
 
 
