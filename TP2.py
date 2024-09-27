@@ -5,13 +5,17 @@ Groupe de laboratoire : XX
 Numéro d'équipe :  YY
 Noms et matricules : Nom1 (Matricule1), Nom2 (Matricule2)
 """
-
+import csv
 ########################################################################################################## 
 # PARTIE 1 : Création du système de gestion et ajout de la collection actuelle
 ########################################################################################################## 
 
 # TODO : Écrire votre code ici
-
+csvfile=open("collection_bibliotheque.csv", "r")
+data=csv.reader(csvfile)
+library={}
+for line in data:
+    library[line[3]]=line[1:3]
 
 
 
