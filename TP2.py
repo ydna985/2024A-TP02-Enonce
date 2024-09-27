@@ -17,7 +17,7 @@ library={}
 for line in data:
     library[line[3]]=line[:3]
 csvfile.close()
-
+print(f' \n Bibliotheque initiale : {library} \n')
 
 ########################################################################################################## 
 # PARTIE 2 : Ajout d'une nouvelle collection à la bibliothèque
@@ -48,6 +48,21 @@ for key,value in new_collection.items():
 ########################################################################################################## 
 
 # TODO : Écrire votre code ici
+keys_to_delete={}
+keys_to_add={}
+for key,value in library.items():
+    if value[1] == "William Shakespeare":
+        print(key, value)
+        new_key="WS"+key[1:4]
+        keys_to_add[new_key]=value
+        keys_to_delete[key]=value
+for key in keys_to_delete:
+    del library[key]
+for key,value in keys_to_add.items():
+    library[key]=value
+print(f' \n Bibliotheque avec modifications de cote : {library} \n')
+
+        
 
 
 
