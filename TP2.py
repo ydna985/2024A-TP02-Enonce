@@ -15,9 +15,12 @@ csvfile=open("collection_bibliotheque.csv", "r")
 data=csv.reader(csvfile)
 library={}
 for line in data:
-    library[line[3]]=line[:3]
+    library[line[3]]={"title":line[0], "author":line[1], "publication date":line[2]}
 csvfile.close()
-print(f' \n Bibliotheque initiale : {library} \n')
+for key in library:
+    print(key, library[key])
+print("\n")
+#print(f' \n Bibliotheque initiale : {library} \n')
 
 ########################################################################################################## 
 # PARTIE 2 : Ajout d'une nouvelle collection à la bibliothèque
@@ -28,17 +31,16 @@ csvfile=open("nouvelle_collection.csv", "r")
 data=csv.reader(csvfile)
 new_collection={}
 for line in data:
-    new_collection[line[3]]=line[:3]
+    new_collection[line[3]]={"title":line[0], "author":line[1], "publication date":line[2]}
 csvfile.close()
-for key,value in new_collection.items():
-    is_inside=key in library
-    if  (key in library) == False:
-        library[key]=value
-        print(f"Le livre {key} ---- {value[0]} par {value[1]} ---- a été ajouté avec succès")
+
+for key,data in new_collection.items():
+    if  key in library:
+        print(f"Le livre {key} ---- {data["title"]} par {data["author"]} ---- est déjà présent dans la bibliothèque")
     else:
-        print(f"Le livre {key} ---- {value[0]} par {value[1]} ---- est déjà présent dans la bibliothèque")
-
-
+        library[key]=data
+        print(f"Le livre {key} ---- {data["title"]} par {data["author"]} ---- a été ajouté avec succès")
+print("\n")
 
 
 
@@ -50,17 +52,22 @@ for key,value in new_collection.items():
 # TODO : Écrire votre code ici
 keys_to_delete={}
 keys_to_add={}
-for key,value in library.items():
-    if value[1] == "William Shakespeare":
-        print(key, value)
+for key,data in library.items():
+    if data["author"] == "William Shakespeare":
+        print(key, data)
         new_key="WS"+key[1:4]
-        keys_to_add[new_key]=value
-        keys_to_delete[key]=value
+        keys_to_add[new_key]=data
+        keys_to_delete[key]=data
 for key in keys_to_delete:
     del library[key]
-for key,value in keys_to_add.items():
-    library[key]=value
-print(f' \n Bibliotheque avec modifications de cote : {library} \n')
+for key,data in keys_to_add.items():
+    library[key]=data
+
+for key in library:
+    if "WS" in key:
+        print(key, library[key])
+print("\n")
+#print(f' \n Bibliotheque avec modifications de cote : {library} \n')
 
         
 
