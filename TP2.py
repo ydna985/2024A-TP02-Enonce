@@ -3,7 +3,7 @@ TP2 : Système de gestion de livres pour une bibliothèque
 
 Groupe de laboratoire : 06
 Numéro d'équipe :  12
-Noms et matricules : Koutou Andy Abdoul Mouhaimine (2390725), Nom2 (Matricule2)
+Noms et matricules : Koutou Andy Abdoul Mouhaimine (2390725), Frédéric Michaud (2393155)
 """
 import csv
 import datetime
@@ -81,14 +81,22 @@ print("\n")
 
 # TODO : Écrire votre code ici
 
+csvfile = open("emprunts.csv", "r")
+data = csv.reader(csvfile)
+for line in data:
+    cote = line[0]  # Assuming cote is the first field in the CSV
+    date_emprunt = line[1]  # Assuming date is the second field
 
+    if cote in library:
+        library[cote]['emprunts'] = "emprunté"
+        library[cote]['date_emprunt'] = date_emprunt
+    else:
+        print(f"Le livre avec la cote {cote} n'existe pas dans la bibliothèque")
 
+csvfile.close()
 
-
-
-
-
-
+print(f' \n Bibliotheque avec ajout des emprunts : {library} \n')
+        
 
 ########################################################################################################## 
 # PARTIE 5 : Livres en retard 
