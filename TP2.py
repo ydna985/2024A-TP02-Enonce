@@ -108,7 +108,7 @@ for key, data in library.items():
         else:
             library[key]["frais_retard"]=None
 
-        if days_borrowed > 365:
+        if days_borrowed >= 365:
             library[key]["livres_perdus"]=True
         else:
             library[key]["livres_perdus"]=False
