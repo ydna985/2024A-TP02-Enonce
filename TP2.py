@@ -17,11 +17,11 @@ csvfile=open("collection_bibliotheque.csv", "r")
 data=csv.reader(csvfile)
 library={}
 for line in data:
+    if data.line_num==1:
+        continue
     library[line[3]]={"titre":line[0], "auteur":line[1], "date_publication":line[2]}
 csvfile.close()
-for key in library:
-    print(key, library[key])
-print("\n")
+print(f' \n Bibliotheque initiale : {library} \n')
 
 ########################################################################################################## 
 # PARTIE 2 : Ajout d'une nouvelle collection à la bibliothèque
@@ -32,6 +32,8 @@ csvfile=open("nouvelle_collection.csv", "r")
 data=csv.reader(csvfile)
 new_collection={}
 for line in data:
+    if data.line_num==1:
+        continue
     new_collection[line[3]]={"titre":line[0], "auteur":line[1], "date_publication":line[2]}
 csvfile.close()
 
@@ -41,9 +43,6 @@ for key,data in new_collection.items():
     else:
         library[key]=data
         print(f"Le livre {key} ---- {data['titre']} par {data['auteur']} ---- a été ajouté avec succès")
-print("\n")
-
-
 
 
 ########################################################################################################## 
@@ -55,25 +54,14 @@ keys_to_delete={}
 keys_to_add={}
 for key,data in library.items():
     if data["auteur"] == "William Shakespeare":
-        print(key, data)
         new_key="WS"+key[1:4]
         keys_to_add[new_key]=data
         keys_to_delete[key]=data
 for key in keys_to_delete:
     del library[key]
 for key,data in keys_to_add.items():
-    library[key]=data
-
-for key in library:
-    print(key, library[key])      
-print("\n")
-
-        
-
-
-
-
-
+    library[key]=data      
+print(f' \n Bibliotheque avec modifications de cote : {library} \n')
 
 
 ########################################################################################################## 
@@ -84,49 +72,48 @@ print("\n")
 
 csvfile = open("emprunts.csv", "r")
 data = csv.reader(csvfile)
+emprunt={}
 for line in data:
-    cote = line[0]  
-    date_emprunt = line[1]  
+    if data.line_num==1:
+        continue
+    emprunt[line[0]]=line[1]  
 
-    if cote in library:
-        library[cote]['emprunts'] = "emprunté"
-        library[cote]['date_emprunt'] = date_emprunt
+for key in library:
+    if key in emprunt:
+        library[key]['emprunts']="emprunté"
+        library[key]['date_emprunt'] = emprunt[key]
     else:
-        print(f"Le livre avec la cote {cote} est disponible.")
+        library[key]['emprunts']="disponible"
+        library[key]['date_emprunt'] = None
 
 csvfile.close()
-
-print(f' \n Bibliotheque avec ajout des emprunts : \n {library} \n')
+print(f' \n Bibliotheque avec ajout des emprunts : {library} \n')
         
 
-########################################################################################################## 
+# ########################################################################################################## 
 # PARTIE 5 : Livres en retard 
 ########################################################################################################## 
 frais_jour, frais_max = 2, 100
 jour_si_perdu = 365
-
-library['livres_retard'] = []
-library['livres_perdus'] = []
-
 ajd = datetime.now()
 
-for key, cote in library.items():
-    if 'date_emprunt' in cote:
-        try:
-            date_emprunt = datetime.strptime(cote['date_emprunt'], "%Y-%m-%d")
-            days_borrowed = (ajd - date_emprunt).days
+for key, data in library.items():
+    if data["emprunts"] == "emprunté":
+        date_emprunt = datetime.strptime(data['date_emprunt'], "%Y-%m-%d")
+        days_borrowed = (ajd - date_emprunt).days
 
-            if days_borrowed > 30:
-                frais_retard = min((days_borrowed - 30) * frais_jour, frais_max)
-                library['livres_retard'].append((key, frais_retard))
+        if days_borrowed > 30:
+            frais_retard = min((days_borrowed - 30) * frais_jour, frais_max)
+            library[key]["frais_retard"]=frais_retard
+        else:
+            library[key]["frais_retard"]=None
 
-            if days_borrowed > 365:
-                library['livres_perdus'].append(key)
-        except ValueError as e:
-            print(f"Error parsing date for {key}: {e}")
-
+        if days_borrowed > 365:
+            library[key]["livres_perdus"]=True
+        else:
+            library[key]["livres_perdus"]=False
+    else:
+        library[key]["frais_retard"]=None
+        library[key]["livres_perdus"]=False
+        
 print(f' \n Bibliotheque avec ajout des retards et frais : {library} \n')
-
-
-
-
