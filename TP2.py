@@ -6,7 +6,8 @@ Numéro d'équipe :  12
 Noms et matricules : Koutou Andy Abdoul Mouhaimine (2390725), Frédéric Michaud (2393155)
 """
 import csv
-import datetime
+from datetime import datetime
+
 ########################################################################################################## 
 # PARTIE 1 : Création du système de gestion et ajout de la collection actuelle
 ########################################################################################################## 
@@ -36,10 +37,10 @@ csvfile.close()
 
 for key,data in new_collection.items():
     if  key in library:
-        print(f"Le livre {key} ---- {data["titre"]} par {data["auteur"]} ---- est déjà présent dans la bibliothèque")
+        print(f"Le livre {key} ---- {data['titre']} par {data['auteur']} ---- est déjà présent dans la bibliothèque")
     else:
         library[key]=data
-        print(f"Le livre {key} ---- {data["titre"]} par {data["auteur"]} ---- a été ajouté avec succès")
+        print(f"Le livre {key} ---- {data['titre']} par {data['auteur']} ---- a été ajouté avec succès")
 print("\n")
 
 
@@ -84,32 +85,47 @@ print("\n")
 csvfile = open("emprunts.csv", "r")
 data = csv.reader(csvfile)
 for line in data:
-    cote = line[0]  # Assuming cote is the first field in the CSV
-    date_emprunt = line[1]  # Assuming date is the second field
+    cote = line[0]  
+    date_emprunt = line[1]  
 
     if cote in library:
         library[cote]['emprunts'] = "emprunté"
         library[cote]['date_emprunt'] = date_emprunt
     else:
-        print(f"Le livre avec la cote {cote} n'existe pas dans la bibliothèque")
+        print(f"Le livre avec la cote {cote} est disponible.")
 
 csvfile.close()
 
-print(f' \n Bibliotheque avec ajout des emprunts : {library} \n')
+print(f' \n Bibliotheque avec ajout des emprunts : \n {library} \n')
         
 
 ########################################################################################################## 
 # PARTIE 5 : Livres en retard 
 ########################################################################################################## 
+frais_jour, frais_max = 2, 100
+jour_si_perdu = 365
 
-# TODO : Écrire votre code ici
+library['livres_retard'] = []
+library['livres_perdus'] = []
 
+ajd = datetime.now()
 
+for key, cote in library.items():
+    if 'date_emprunt' in cote:
+        try:
+            date_emprunt = datetime.strptime(cote['date_emprunt'], "%Y-%m-%d")
+            days_borrowed = (ajd - date_emprunt).days
 
+            if days_borrowed > 30:
+                frais_retard = min((days_borrowed - 30) * frais_jour, frais_max)
+                library['livres_retard'].append((key, frais_retard))
 
+            if days_borrowed > 365:
+                library['livres_perdus'].append(key)
+        except ValueError as e:
+            print(f"Error parsing date for {key}: {e}")
 
-
-
+print(f' \n Bibliotheque avec ajout des retards et frais : {library} \n')
 
 
 
